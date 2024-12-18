@@ -5,10 +5,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import Index from "./pages/Index";
-import Analytics from "./pages/Analytics";
-import Transactions from "./pages/Transactions";
-import Notifications from "./pages/Notifications";
-import Profile from "./pages/Profile";
+import Attendance from "./pages/Attendance";
+import Vault from "./pages/Vault";
+import Reports from "./pages/Reports";
+import Messages from "./pages/Messages";
+import Staff from "./pages/Staff";
+import Roles from "./pages/Roles";
+import IdCards from "./pages/IdCards";
 import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
@@ -25,10 +28,13 @@ const App = () => (
             <div className="max-w-7xl mx-auto">
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/transactions" element={<Transactions />} />
-                <Route path="/notifications" element={<Notifications />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route path="/attendance" element={<Attendance />} />
+                <Route path="/vault" element={<Vault />} />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/management/staff" element={<Staff />} />
+                <Route path="/management/roles" element={<Roles />} />
+                <Route path="/management/id-cards" element={<IdCards />} />
                 <Route path="/settings" element={<Settings />} />
               </Routes>
             </div>
