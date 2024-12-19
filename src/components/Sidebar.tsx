@@ -43,6 +43,7 @@ const menuItems = [
 const Sidebar = () => {
   const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isManagementOpen, setIsManagementOpen] = useState(false);
 
   return (
     <>
@@ -65,7 +66,7 @@ const Sidebar = () => {
             <h2 className="text-2xl font-bold text-primary">Bank Manager</h2>
           </div>
           
-          <nav className="flex-1 px-4 space-y-1">
+          <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
             <ul className="space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
@@ -75,43 +76,41 @@ const Sidebar = () => {
                 if (item.dropdown) {
                   return (
                     <li key={item.path}>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="w-full">
-                          <div
-                            className={cn(
-                              "flex items-center justify-between w-full px-4 py-3 rounded-lg transition-all duration-200",
-                              "hover:bg-white/10",
-                              isActive ? "bg-white/10" : "text-secondary"
-                            )}
-                          >
-                            <div className="flex items-center gap-3">
-                              <Icon className="h-5 w-5" />
-                              <span>{item.label}</span>
-                            </div>
-                            <ChevronDown className="h-4 w-4" />
-                          </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent 
-                          className="w-56 bg-card/95 backdrop-blur-sm border-white/10"
-                          align="start"
-                          side="right"
-                        >
+                      <button
+                        onClick={() => setIsManagementOpen(!isManagementOpen)}
+                        className={cn(
+                          "flex items-center justify-between w-full px-4 py-3 rounded-lg transition-all duration-200",
+                          "hover:bg-white/10",
+                          isActive ? "bg-white/10" : "text-secondary"
+                        )}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Icon className="h-5 w-5" />
+                          <span>{item.label}</span>
+                        </div>
+                        <ChevronDown className={cn(
+                          "h-4 w-4 transition-transform duration-200",
+                          isManagementOpen ? "rotate-180" : ""
+                        )} />
+                      </button>
+                      {isManagementOpen && (
+                        <div className="ml-4 mt-1 space-y-1">
                           {item.dropdown.map((dropdownItem) => (
-                            <DropdownMenuItem 
+                            <Link
                               key={dropdownItem.path}
-                              className="focus:bg-white/10"
+                              to={dropdownItem.path}
+                              onClick={() => setIsMobileOpen(false)}
+                              className={cn(
+                                "flex items-center px-4 py-2 rounded-lg transition-all duration-200",
+                                "hover:bg-white/10",
+                                location.pathname === dropdownItem.path ? "bg-white/10" : "text-secondary"
+                              )}
                             >
-                              <Link
-                                to={dropdownItem.path}
-                                className="w-full px-2 py-1"
-                                onClick={() => setIsMobileOpen(false)}
-                              >
-                                {dropdownItem.label}
-                              </Link>
-                            </DropdownMenuItem>
+                              {dropdownItem.label}
+                            </Link>
                           ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                        </div>
+                      )}
                     </li>
                   );
                 }
