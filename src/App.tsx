@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import Index from "./pages/Index";
 import Attendance from "./pages/Attendance";
+import Monitoring from "./pages/Monitoring";
 import Vault from "./pages/Vault";
 import Reports from "./pages/Reports";
 import Messages from "./pages/Messages";
@@ -29,6 +30,7 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/attendance" element={<Attendance />} />
+                <Route path="/monitoring" element={<Monitoring />} />
                 <Route path="/vault" element={<Vault />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/messages" element={<Messages />} />

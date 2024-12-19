@@ -7,7 +7,8 @@ import {
   UserCircle,
   Settings,
   ChevronDown,
-  Menu
+  Menu,
+  Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -32,6 +33,7 @@ const menuItems = [
     ]
   },
   { icon: ClipboardList, label: "Attendance", path: "/attendance" },
+  { icon: Activity, label: "Monitoring", path: "/monitoring" },
   { icon: Shield, label: "Vault", path: "/vault" },
   { icon: FileText, label: "Reports", path: "/reports" },
   { icon: MessageSquare, label: "Messages", path: "/messages" },
