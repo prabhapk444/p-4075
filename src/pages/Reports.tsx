@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { FileText, TrendingUp, Download, Search, ArrowUpDown } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -11,25 +9,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useToast } from "@/components/ui/use-toast";
+import { StatsCards } from "@/components/reports/StatsCards";
+import { SearchInput } from "@/components/reports/SearchInput";
+import { ReportTable } from "@/components/reports/ReportTable";
 
-// Mock data for different report types
 const reportData = {
   staff: [
     { id: 1, name: "John Doe", position: "Teller", department: "Operations", joinDate: "2023-01-15" },
@@ -69,7 +60,6 @@ const Reports = () => {
       title: "Export Started",
       description: `Exporting ${reportType} report as ${format.toUpperCase()}`,
     });
-    // Implementation for actual export functionality would go here
   };
 
   const getTableHeaders = () => {
@@ -105,43 +95,7 @@ const Reports = () => {
         <p className="text-secondary-foreground">View and generate bank reports</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="glass-card p-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Generated Reports</p>
-              <h2 className="text-2xl font-bold">45</h2>
-            </div>
-            <div className="p-2 bg-blue-100 rounded-full">
-              <FileText className="h-4 w-4 text-blue-600" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="glass-card p-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Monthly Growth</p>
-              <h2 className="text-2xl font-bold">+12.5%</h2>
-            </div>
-            <div className="p-2 bg-green-100 rounded-full">
-              <TrendingUp className="h-4 w-4 text-green-600" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="glass-card p-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Downloads</p>
-              <h2 className="text-2xl font-bold">238</h2>
-            </div>
-            <div className="p-2 bg-purple-100 rounded-full">
-              <Download className="h-4 w-4 text-purple-600" />
-            </div>
-          </div>
-        </Card>
-      </div>
+      <StatsCards />
 
       <Card className="glass-card p-6">
         <div className="space-y-4">
@@ -159,15 +113,7 @@ const Reports = () => {
                   <SelectItem value="users">User Report</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="flex-1">
-                <Input
-                  placeholder="Search..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full"
-                  icon={<Search className="h-4 w-4" />}
-                />
-              </div>
+              <SearchInput value={searchTerm} onChange={setSearchTerm} />
             </div>
             <div className="flex gap-2">
               <Button onClick={() => handleExport("pdf")} variant="outline">
@@ -185,40 +131,18 @@ const Reports = () => {
             </div>
           </div>
 
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {getTableHeaders().map((header, index) => (
-                    <TableHead key={index} onClick={() => handleSort(header.toLowerCase())}>
-                      <div className="flex items-center gap-2 cursor-pointer">
-                        {header}
-                        <ArrowUpDown className="h-4 w-4" />
-                      </div>
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {reportData[reportType].map((item) => (
-                  <TableRow key={item.id}>
-                    {Object.keys(item)
-                      .filter((key) => key !== "id")
-                      .map((key, index) => (
-                        <TableCell key={index}>{item[key]}</TableCell>
-                      ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          <ReportTable 
+            headers={getTableHeaders()} 
+            data={reportData[reportType]}
+            onSort={handleSort}
+          />
 
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious
+                <PaginationPrevious 
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
+                  aria-disabled={currentPage === 1}
                 />
               </PaginationItem>
               {[...Array(totalPages)].map((_, index) => (
@@ -234,7 +158,7 @@ const Reports = () => {
               <PaginationItem>
                 <PaginationNext
                   onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  disabled={currentPage === totalPages}
+                  aria-disabled={currentPage === totalPages}
                 />
               </PaginationItem>
             </PaginationContent>
