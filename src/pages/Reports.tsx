@@ -20,6 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { StatsCards } from "@/components/reports/StatsCards";
 import { SearchInput } from "@/components/reports/SearchInput";
 import { ReportTable } from "@/components/reports/ReportTable";
+import { exportToPDF, exportToExcel, exportToCSV, exportToWord } from "@/utils/exportUtils";
 
 const reportData = {
   staff: [
@@ -55,11 +56,41 @@ const Reports = () => {
   const itemsPerPage = 10;
   const totalPages = Math.ceil(reportData[reportType].length / itemsPerPage);
 
-  const handleExport = (format) => {
-    toast({
-      title: "Export Started",
-      description: `Exporting ${reportType} report as ${format.toUpperCase()}`,
-    });
+  const handleExport = async (format: string) => {
+    try {
+      const headers = getTableHeaders();
+      const exportData = {
+        headers,
+        data: reportData[reportType],
+        reportType,
+      };
+
+      switch (format) {
+        case 'pdf':
+          await exportToPDF(exportData);
+          break;
+        case 'excel':
+          await exportToExcel(exportData);
+          break;
+        case 'csv':
+          await exportToCSV(exportData);
+          break;
+        case 'word':
+          await exportToWord(exportData);
+          break;
+      }
+
+      toast({
+        title: "Export Successful",
+        description: `The ${reportType} report has been exported as ${format.toUpperCase()}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "There was an error exporting the report. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const getTableHeaders = () => {
@@ -115,7 +146,7 @@ const Reports = () => {
               </Select>
               <SearchInput value={searchTerm} onChange={setSearchTerm} />
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <Button onClick={() => handleExport("pdf")} variant="outline">
                 Export PDF
               </Button>
