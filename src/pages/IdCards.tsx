@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CreditCard, Printer, RefreshCw, Download } from "lucide-react";
+import { CreditCard, Printer, RefreshCw, Download, QrCode } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 const IdCards = () => {
@@ -25,8 +25,6 @@ const IdCards = () => {
   };
 
   const handleGenerateCard = () => {
-    // In a real application, this would connect to a backend service
-    // to generate and return the ID card
     toast({
       title: "ID Card Generated",
       description: "The ID card has been generated successfully.",
@@ -149,32 +147,55 @@ const IdCards = () => {
 
         <Card className="glass-card p-6">
           <h2 className="text-2xl font-semibold mb-6">Preview</h2>
-          <div className="aspect-[85.6/53.98] bg-white rounded-lg shadow-lg p-6 relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg" />
+          <div className="aspect-[85.6/53.98] bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-lg shadow-lg p-6 relative overflow-hidden">
+            {/* Bank Logo Watermark */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-5">
+              <CreditCard className="w-64 h-64" />
+            </div>
+            
+            {/* Security Pattern */}
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+CiAgPHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPgogIDxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=')] opacity-20" />
+            
             <div className="relative z-10 h-full flex flex-col justify-between">
               <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-bold text-lg">{formData.name || "Employee Name"}</h3>
-                  <p className="text-sm text-muted-foreground">{formData.position || "Position"}</p>
+                <div className="space-y-1">
+                  <h3 className="font-bold text-lg tracking-tight">{formData.name || "Employee Name"}</h3>
+                  <p className="text-sm text-muted-foreground font-medium">{formData.position || "Position"}</p>
                 </div>
-                <div className="w-20 h-20 bg-muted rounded-lg flex items-center justify-center">
+                <div className="w-20 h-20 bg-muted rounded-lg flex items-center justify-center border-2 border-white/10">
                   <CreditCard className="h-8 w-8 text-muted-foreground" />
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <p className="text-sm">
-                  <span className="text-muted-foreground">ID: </span>
-                  {formData.employeeId || "EMP-0000"}
-                </p>
-                <p className="text-sm">
-                  <span className="text-muted-foreground">Dept: </span>
-                  {formData.department || "Department"}
-                </p>
-                <p className="text-sm">
-                  <span className="text-muted-foreground">Joined: </span>
-                  {formData.joinDate || "YYYY-MM-DD"}
-                </p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <QrCode className="h-24 w-24 text-primary/20" />
+                  <div className="space-y-1">
+                    <p className="text-sm">
+                      <span className="text-muted-foreground font-medium">ID: </span>
+                      <span className="font-mono">{formData.employeeId || "EMP-0000"}</span>
+                    </p>
+                    <p className="text-sm">
+                      <span className="text-muted-foreground font-medium">Dept: </span>
+                      {formData.department || "Department"}
+                    </p>
+                    <p className="text-sm">
+                      <span className="text-muted-foreground font-medium">Joined: </span>
+                      {formData.joinDate || "YYYY-MM-DD"}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="h-1 w-full bg-gradient-to-r from-primary via-accent to-primary rounded-full opacity-20" />
+                
+                <div className="flex justify-between items-end text-[10px] text-muted-foreground">
+                  <span>Bank Management System</span>
+                  <span>Valid until: {
+                    formData.joinDate 
+                      ? new Date(new Date(formData.joinDate).setFullYear(new Date(formData.joinDate).getFullYear() + 1)).toLocaleDateString()
+                      : "YYYY-MM-DD"
+                  }</span>
+                </div>
               </div>
             </div>
           </div>
